@@ -1,0 +1,81 @@
+body
+{
+    font-family: 'PT Mono', monospace;
+
+    text-align: center;
+}
+
+#word-box
+{
+    font-family: 'PT Mono', monospace;
+    font-size: 4em;
+
+    display: inline-block;
+
+    margin: 0 auto;
+    margin-bottom: 15px;
+
+    text-indent: 20px;
+    letter-spacing: 20px;
+
+    border-radius: 10px;
+    background-color: #def;
+}
+
+#letter-box
+{
+    font-family: sans-serif;
+    font-size: 2em;
+    font-weight: bold;
+
+    display: inline-block;
+
+    width: 80%;
+    min-width: 200px;
+    max-width: 650px;
+    margin: 0 auto;
+    margin-top: 5px;
+
+    color: #2469ae;
+}
+
+.letter
+{
+    display: inline-block;
+
+    width: 40px;
+    margin: 4px;
+
+    cursor: pointer;
+    transition: transform .3s;
+    text-transform: uppercase;;
+}
+
+.letter:hover,
+.grow
+{
+    transform: scale(2);
+}
+
+.letter.wrong
+{
+    color: #c00;
+}
+
+.letter.correct
+{
+    color: #4b4;
+}
+
+.game-over > .letter,
+.letter.wrong:hover,
+.letter.correct:hover,
+.letter.no-animate
+{
+    transform: none;
+}
+
+#letter-box.game-over
+{
+    color: #ddd;
+}
