@@ -11,7 +11,7 @@ const ARM_L = document.querySelector('#arm-l');
 const LEG_R = document.querySelector('#leg-r');
 const LEG_L = document.querySelector('#leg-l');
 const FACE = document.querySelector('#face');
-const BODY = [HEAD, TRUNK, ARM_L, ARM_R, LEG_L, LEG_R, FACE];
+const SVG_BODY = [HEAD, TRUNK, ARM_L, ARM_R, LEG_L, LEG_R, FACE];
 
 let wordList = [
   "ÐûàóÀÙ²", "ÔÑÚçÒ×¶Å", "ÎËâÕØ", "ØÝÚáÎÅÐ­¸©", "ÒëèÝÈ·Æ", "ÖûÒÍÚË¸Çº", "Ò÷æÓÖ¿Î", "ÔåèëèÙ´", "ØïèéàÕ¸½º", "Ôñèçè¿Ò", "Ðíøáâ", "ÖûÌéê¿Ð", "Ü÷îÛàÕ°¯", "ØÕìïÎ»", "Üáò×ÐÕÊµ", "ÖÝäåÂ", "ÞõÐãÌçÌÅ¨", "ÜùèÍèÉÊ»", "àÓæõÄÕÀÕ", "ÚÍüÍÀÑ", "Øûæçì", "ÚËØ×ä", "âÓîÙÄí°Å", "àíÞíèÉÈ­", "ÜýèÓÆÏ", "æÛÚçìÍ¼µ§", "äíöÓæÅ°§", "â÷ÖëÂßÊÃ", "Üõäåì", "ÞËúõì", "èÕĂùÆÓÆµ°", "ÞÛÒÍì", "ÜÙàï", "â÷àÏÂÓÚ", "àËøÃÐ", "àÛäçÐ", "àáðéî", "æßòÏâ·Â", "àåâß", "äõøíàå", "è×äÏÚÝÈ", "ìûèãÔÅÀ«", "èÿðíÐÁÜ", "îûèÍèÏØ¹ª", "ð÷öíÄ¿ÀÕ", "êûúÑÆÏ", "ìÍÜÅÖµ", "ðÑðÉØÏ®Ï", "ìÛàÍÊÍ", "êÛöËÒ", "êçÞ×¼", "ìéöñÚá", "òõàãÔáÀÍ", "ðùĀûØÉÈ­", "îõÊçäç", "òùÞ÷Þß¾¥", "îÓÈÇâ", "ôÙØÉÆßÊÃ", "ò×ðíÊßÂ", "øÝüÝðÍ¼µ", "ôßþïÐÑ¾¥", "îçÔëÄ", "òÑìÕÜÛ", "òëØÕØã", "òíòÅêÉ", "øûÚÕÌÝÀ½ ", "òùÚïÆË", "òýäë¾ã", "òçÈÉì", "öûÔÝÊÝº", "ôåúÓÚ", "üÑðÙÂ»Ä©", "þïĀÓìÝÀÇ¬", "öÉôñ", "ĂåèÓÎ¿º­º«", "üËÌÑâ", "ĂíöïÐÃÖ·", "Ă×ÌÝÜßÐ", "ĀÝÖ÷¾Á", "þÛæáì", "ĀéâÇÎ½"
@@ -116,26 +116,25 @@ const guess = (ev) => {
     displayWord();
   } else {
     badGuessCount++;
-    BODY[badGuessCount-1].classList.remove("faded");
+    SVG_BODY[badGuessCount-1].classList.remove("faded");
   }
   if (wordArr.every(b => b === true)) win();
-  if (badGuessCount === BODY.length) lose();
+  if (badGuessCount === SVG_BODY.length) lose();
 };
 
 const newGame = (word) => {
+  if (isOver) gameCount++;
+  isOver = false;
   setWord(word);
   displayWord();
   updateLetters();
   LETTER_BOX.classList.remove("game-over");
-  WORD_BOX.classList.remove("wrong");
   badGuessCount = 0;
   guessCount = 0;
-  for(let x of BODY) {
+  for(let x of SVG_BODY) {
     x.classList.add('faded');
   }
-  if (isOver) gameCount++;
-  console.log(gameCount);
-  isOver = false;
+
   MSG_BOX.textContent = getRandomMessage();
 };
 
@@ -150,11 +149,6 @@ const lose = () => {
   LETTER_BOX.classList.add("game-over");
   isOver = true;
   MSG_BOX.textContent = randomLossMsg();
-  for (let i = 0; i < wordArr.length; i++) {
-    wordArr[i] = true;
-  }
-  //TODO: Guessed letters stay black
-  WORD_BOX.classList.add("wrong");
   displayWord();
 }
 
@@ -203,11 +197,15 @@ const getUnderscores = (word) => {
 
 const displayWord = () => {
   let newWord = "";
+  WORD_BOX.innerHTML = "";
   let decryptedWord = decryptStr(currentWord);
   for (let i = 0; i < currentWord.length; i++) {
-    newWord += wordArr[i] ? decryptedWord[i] : '_';
+    let letter = wordArr[i] || isOver ? decryptedWord[i] : '_';
+    let el = document.createElement("span");
+    el.appendChild(document.createTextNode(letter));
+    if (isOver && !wordArr[i]) el.classList.add("wrong");
+    WORD_BOX.appendChild(el);
   }
-  WORD_BOX.textContent = newWord;
 }
 
 const updateLetters = () => {
