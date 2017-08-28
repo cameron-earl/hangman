@@ -11,7 +11,9 @@ let wordList = [
 
 let currentWord,
   wordArr,
-  isOver = false;;
+  isOver = false
+  badGuessCount = 0;
+  guessCount = 0;
 
 window.onload = () => {
   createAlphabet();
@@ -77,7 +79,12 @@ const guess = (ev) => {
       goodGuess = true;
     }
   }
-  if (goodGuess) displayWord();
+  if (goodGuess) {
+    displayWord();
+  } else {
+    badGuessCount++;
+  }
+  guessCount++;
   el.className += goodGuess ? " correct" : " wrong";
   if (wordArr.every(b => b === true)) gameOver();
 };
@@ -88,12 +95,16 @@ const newGame = () => {
   updateLetters();
   isOver = false;
   LETTER_BOX.classList.remove("game-over");
+  badGuessCount = 0;
+  guessCount = 0;
+  MSG_BOX.textContent = getRandomMessage();
 };
 
 const gameOver = () => {
   LETTER_BOX.classList.add("game-over");
   isOver = true;
-
+  let accuracy = Math.floor((guessCount - badGuessCount) / guessCount * 100);
+  MSG_BOX.textContent = "You won with " + accuracy + "% accuracy. Press enter, space or button for new game.";
 }
 
 const setWord = () => {
@@ -135,6 +146,21 @@ const updateLetters = () => {
   for (let i = 0; i < letters.length; i++) {
     letters[i].className = "letter";
   }
+}
+
+const getRandomMessage = () => {
+  let messages = [
+    currentWord.length + " letters of mystery. Guess away!",
+    "Feel free to imagine a beautifuly rendered gallows above.",
+    "You can type or click the letters, whichever is easier.",
+    "Right or wrong, at least it's not a matter of life and death, right?",
+    '["hip","hip"]',
+    'Two threads walk into a bar. The barkeeper looks up and yells, "hey, I want don\'t any conditions race like time last!"',
+    "There are " + wordList.length + " possible words.",
+    "There's no place like 127.0.0.1"
+  ];
+  let i = Math.floor(Math.random() * messages.length);
+  return messages[i];
 }
 
 const decryptStr = (str) => {
