@@ -93,7 +93,12 @@ svg
     color: #ddd;
 }
 
-#new-game-btn
+#options
+{
+    padding-top: 20px;
+}
+
+.button
 {
     font-weight: bold;
 
@@ -108,6 +113,11 @@ svg
     color: white;
     border-radius: 5px;
     background-color: #2469ae;
+}
+
+.hidden
+{
+    display: none;
 }
 
 #new-game-btn:hover,

@@ -1,6 +1,8 @@
 const WORD_BOX = document.querySelector("#word-box");
 const MSG_BOX = document.querySelector("#msg-box");
 const LETTER_BOX = document.querySelector("#letter-box");
+const CUSTOM_BTN = document.querySelector("#custom-btn");
+const CUSTOM_INPUT = document.querySelector('#custom-input');
 const NEW_GAME_BTN = document.querySelector("#new-game-btn");
 const HEAD = document.querySelector('#head');
 const TRUNK = document.querySelector('#trunk');
@@ -19,8 +21,10 @@ let wordList = [
 let currentWord,
   wordArr,
   isOver = false
-  badGuessCount = 0;
-  guessCount = 0;
+  badGuessCount = 0,
+  guessCount = 0,
+  gameCount = 0,
+  inputActive = false;
 
 window.onload = () => {
   createAlphabet();
@@ -43,14 +47,15 @@ const createAlphabet = () => {
 
 const addEvents = () => {
   window.addEventListener("keydown", function(ev) {
-    var key = ev.key.toLowerCase();
-    if (!isOver && key.length === 1 && /[a-z]/.test(key)) {
-      let el = document.querySelector("#" + key);
-      el.classList.add("change");
-      guess(el);
+    if (!inputActive) {
+      var key = ev.key.toLowerCase();
+      if (!isOver && key.length === 1 && /[a-z]/.test(key)) {
+        let el = document.querySelector("#" + key);
+        el.classList.add("change");
+        guess(el);
+      }
     }
-
-    if (key === " " || key === "enter") {
+    if (key === "enter") {
         newGame();
         NEW_GAME_BTN.classList.add("change");
     }
@@ -65,12 +70,31 @@ const addEvents = () => {
         el.classList.add("no-animate");
       }
     }
-    if (key === " " || key === "enter") {
+    if (key === "enter") {
         NEW_GAME_BTN.classList.remove("change");
     }
   });
 
   NEW_GAME_BTN.addEventListener("click", newGame);
+  CUSTOM_BTN.addEventListener("click", (ev) => {
+    CUSTOM_INPUT.classList.toggle("hidden");
+    inputActive = !inputActive;
+    if (inputActive) {
+      CUSTOM_INPUT.focus();
+    }
+    else {
+      CUSTOM_INPUT.value = "";
+    }
+  });
+
+  CUSTOM_INPUT.addEventListener("keyup", (ev) => {
+    if (ev.keyCode === 13) {
+      newGame(CUSTOM_INPUT.value);
+      CUSTOM_BTN.click();
+    } else if (ev.keyCode === 27) {
+      CUSTOM_BTN.click();
+    }
+  });
 }
 
 const guess = (ev) => {
@@ -98,26 +122,28 @@ const guess = (ev) => {
   if (badGuessCount === BODY.length) lose();
 };
 
-const newGame = () => {
-  setWord();
+const newGame = (word) => {
+  setWord(word);
   displayWord();
   updateLetters();
-  isOver = false;
   LETTER_BOX.classList.remove("game-over");
   WORD_BOX.classList.remove("wrong");
   badGuessCount = 0;
   guessCount = 0;
-  MSG_BOX.textContent = getRandomMessage();
   for(let x of BODY) {
     x.classList.add('faded');
   }
+  if (isOver) gameCount++;
+  console.log(gameCount);
+  isOver = false;
+  MSG_BOX.textContent = getRandomMessage();
 };
 
 const win = () => {
   LETTER_BOX.classList.add("game-over");
   isOver = true;
   let accuracy = Math.floor((guessCount - badGuessCount) / guessCount * 100);
-  MSG_BOX.textContent = "You won with " + accuracy + "% accuracy. Press enter, space or button for new game.";
+  MSG_BOX.textContent = "You won with " + accuracy + "% accuracy. Press enter or click button for new game.";
 }
 
 const lose = () => {
@@ -145,8 +171,13 @@ const randomLossMsg = () => {
   return messages[i];
 }
 
-const setWord = () => {
-  let word = getRandomWord();
+const setWord = (word) => {
+  if (typeof word === "string") {
+    word = word.replace(/[^a-zA-Z]/g, "").toLowerCase();
+    word = word.length >= 4 ? encryptStr(word) : getRandomWord();
+  } else {
+    word = getRandomWord();
+  }
   while (word === currentWord) {
     word = getRandomWord();
   }
@@ -187,19 +218,33 @@ const updateLetters = () => {
 }
 
 const getRandomMessage = () => {
+  if (!gameCount) {
+    return "Welcome to hangman! Click or type letters to guess.";
+  }
+
   let messages = [
-    currentWord.length + " letters of mystery. Guess away!",
-    "Feel free to imagine a beautifuly rendered gallows above.",
     "You can type or click the letters, whichever is easier.",
-    "Right or wrong, at least it's not a matter of life and death, right?",
+    "You can set your own words (for your friends) with custom.",
+    "Feel free to inspect the code with Cmd+Alt+I! But no cheating.",
+    currentWord.length + " letters of mystery. Guess away!",
+    "These aren't word-specific hints, by the way.",
+    "There are " + wordList.length + " total possible words.",
+    "There's no place like 127.0.0.1",
+    "Right or wrong, at least it's not a matter of life and death, right? ...",
     '["hip","hip"]',
-    'Two threads walk into a bar. The barkeeper looks up and yells, "hey, I want don\'t any conditions race like time last!"',
-    "There are " + wordList.length + " possible words.",
-    "There's no place like 127.0.0.1"
+    'Two threads walk into a bar. The barkeeper looks up and yells, "hey, I want don\'t any conditions race like time last!"'
   ];
-  let i = Math.floor(Math.random() * messages.length);
+  let i = Math.floor(Math.random() * Math.random() * messages.length);
   return messages[i];
 }
+
+const encryptStr = (str) => {
+  let newStr = "";
+  for (let i = 0; i < str.length; i++) {
+    newStr += String.fromCodePoint((str.codePointAt(i) << 1) + (str.length << 1) - i*i);
+  }
+  return newStr;
+};
 
 const decryptStr = (str) => {
   let newStr = "";
