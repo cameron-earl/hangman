@@ -10,6 +10,25 @@
 
 <body>
   <h1>Hangman</h1>
+  <div id="svg">
+    <svg height="200" width="200">
+      <polyline points="10,190 10,180 190,180 190,190"></polyline>
+      <polyline points="50,180 50,10 120,10 120,40"></polyline>
+      <polyline points="50,40 80,10"></polyline>
+      <line id="arm-l" x1="120" y1="76" x2="100" y2="110"></line>
+      <line id="arm-r" x1="120" y1="76" x2="140" y2="110"></line>
+      <line id="leg-r" x1="120" y1="115" x2="135" y2="160"></line>
+      <line id="leg-l" x1="120" y1="115" x2="105" y2="160"></line>
+      <line id="trunk" x1="120" y1="72" x2="120" y2="115"></line>
+      <circle id="head" cx="120" cy="56" r="16"></circle>
+      <g id="face">
+        <line x1="118" y1="54" x2="112" y2="59"></line>
+        <line x1="118" y1="59" x2="112" y2="54"></line>
+        <line x1="122" y1="54" x2="128" y2="59"></line>
+        <line x1="122" y1="59" x2="128" y2="54"></line>
+      </g>
+    </svg>
+  </div>
   <div id="word-box">
   </div>
   <div>

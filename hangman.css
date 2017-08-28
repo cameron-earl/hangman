@@ -5,6 +5,18 @@ body
     text-align: center;
 }
 
+svg
+{
+    fill: none;
+    stroke: black;
+    stroke-width: 3;
+}
+
+.faded
+{
+    stroke: #eee;
+}
+
 #word-box
 {
     font-family: 'PT Mono', monospace;

@@ -2,7 +2,15 @@ const WORD_BOX = document.querySelector("#word-box");
 const MSG_BOX = document.querySelector("#msg-box");
 const STAT_BOX = document.querySelector("#stat-box");
 const LETTER_BOX = document.querySelector("#letter-box");
-const NEW_GAME_BTN = document.querySelector("#new-game-btn")
+const NEW_GAME_BTN = document.querySelector("#new-game-btn");
+const HEAD = document.querySelector('#head');
+const TRUNK = document.querySelector('#trunk');
+const ARM_R = document.querySelector('#arm-r');
+const ARM_L = document.querySelector('#arm-l');
+const LEG_R = document.querySelector('#leg-r');
+const LEG_L = document.querySelector('#leg-l');
+const FACE = document.querySelector('#face');
+const BODY = [HEAD, TRUNK, ARM_L, ARM_R, LEG_L, LEG_R, FACE];
 
 let wordList = [
   "ÐûàóÀÙ²", "ÔÑÚçÒ×¶Å", "ÎËâÕØ", "ØÝÚáÎÅÐ­¸©", "ÒëèÝÈ·Æ", "ÖûÒÍÚË¸Çº", "Ò÷æÓÖ¿Î", "ÔåèëèÙ´", "ØïèéàÕ¸½º", "Ôñèçè¿Ò", "Ðíøáâ", "ÖûÌéê¿Ð", "Ü÷îÛàÕ°¯", "ØÕìïÎ»", "Üáò×ÐÕÊµ", "ÖÝäåÂ", "ÞõÐãÌçÌÅ¨", "ÜùèÍèÉÊ»", "àÓæõÄÕÀÕ", "ÚÍüÍÀÑ", "Øûæçì", "ÚËØ×ä", "âÓîÙÄí°Å", "àíÞíèÉÈ­", "ÜýèÓÆÏ", "æÛÚçìÍ¼µ§", "äíöÓæÅ°§", "â÷ÖëÂßÊÃ", "Üõäåì", "ÞËúõì", "èÕĂùÆÓÆµ°", "ÞÛÒÍì", "ÜÙàï", "â÷àÏÂÓÚ", "àËøÃÐ", "àÛäçÐ", "àáðéî", "æßòÏâ·Â", "àåâß", "äõøíàå", "è×äÏÚÝÈ", "ìûèãÔÅÀ«", "èÿðíÐÁÜ", "îûèÍèÏØ¹ª", "ð÷öíÄ¿ÀÕ", "êûúÑÆÏ", "ìÍÜÅÖµ", "ðÑðÉØÏ®Ï", "ìÛàÍÊÍ", "êÛöËÒ", "êçÞ×¼", "ìéöñÚá", "òõàãÔáÀÍ", "ðùĀûØÉÈ­", "îõÊçäç", "òùÞ÷Þß¾¥", "îÓÈÇâ", "ôÙØÉÆßÊÃ", "ò×ðíÊßÂ", "øÝüÝðÍ¼µ", "ôßþïÐÑ¾¥", "îçÔëÄ", "òÑìÕÜÛ", "òëØÕØã", "òíòÅêÉ", "øûÚÕÌÝÀ½ ", "òùÚïÆË", "òýäë¾ã", "òçÈÉì", "öûÔÝÊÝº", "ôåúÓÚ", "üÑðÙÂ»Ä©", "þïĀÓìÝÀÇ¬", "öÉôñ", "ĂåèÓÎ¿º­º«", "üËÌÑâ", "ĂíöïÐÃÖ·", "Ă×ÌÝÜßÐ", "ĀÝÖ÷¾Á", "þÛæáì", "ĀéâÇÎ½"
@@ -79,14 +87,16 @@ const guess = (ev) => {
       goodGuess = true;
     }
   }
+  guessCount++;
+  el.className += goodGuess ? " correct" : " wrong";
   if (goodGuess) {
     displayWord();
   } else {
     badGuessCount++;
+    BODY[badGuessCount-1].classList.remove("faded");
   }
-  guessCount++;
-  el.className += goodGuess ? " correct" : " wrong";
-  if (wordArr.every(b => b === true)) gameOver();
+  if (wordArr.every(b => b === true)) win();
+  if (badGuessCount === BODY.length) lose();
 };
 
 const newGame = () => {
@@ -98,13 +108,34 @@ const newGame = () => {
   badGuessCount = 0;
   guessCount = 0;
   MSG_BOX.textContent = getRandomMessage();
+  for(let x of BODY) {
+    x.classList.add('faded');
+  }
 };
 
-const gameOver = () => {
+const win = () => {
   LETTER_BOX.classList.add("game-over");
   isOver = true;
   let accuracy = Math.floor((guessCount - badGuessCount) / guessCount * 100);
   MSG_BOX.textContent = "You won with " + accuracy + "% accuracy. Press enter, space or button for new game.";
+}
+const lose = () => {
+  LETTER_BOX.classList.add("game-over");
+  isOver = true;
+  MSG_BOX.textContent = randomLossMsg();
+}
+
+const randomLossMsg = () => {
+  const messages = [
+    "He was wrong to choose trial by word guessing.",
+    "Some people enjoy saving lives, but you aren't some people.",
+    "So ends the life of another faceless SVG.",
+    "You're supposed to guess the word BEFORE he dies.",
+    "In losing, you learned. Keep racking up them corpses!",
+    "That was the opposite of winning."
+  ];
+  let i = Math.floor(Math.random() * messages.length);
+  return messages[i];
 }
 
 const setWord = () => {
