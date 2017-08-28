@@ -1,6 +1,5 @@
 const WORD_BOX = document.querySelector("#word-box");
 const MSG_BOX = document.querySelector("#msg-box");
-const STAT_BOX = document.querySelector("#stat-box");
 const LETTER_BOX = document.querySelector("#letter-box");
 const NEW_GAME_BTN = document.querySelector("#new-game-btn");
 const HEAD = document.querySelector('#head');
@@ -105,6 +104,7 @@ const newGame = () => {
   updateLetters();
   isOver = false;
   LETTER_BOX.classList.remove("game-over");
+  WORD_BOX.classList.remove("wrong");
   badGuessCount = 0;
   guessCount = 0;
   MSG_BOX.textContent = getRandomMessage();
@@ -119,10 +119,17 @@ const win = () => {
   let accuracy = Math.floor((guessCount - badGuessCount) / guessCount * 100);
   MSG_BOX.textContent = "You won with " + accuracy + "% accuracy. Press enter, space or button for new game.";
 }
+
 const lose = () => {
   LETTER_BOX.classList.add("game-over");
   isOver = true;
   MSG_BOX.textContent = randomLossMsg();
+  for (let i = 0; i < wordArr.length; i++) {
+    wordArr[i] = true;
+  }
+  //TODO: Guessed letters stay black
+  WORD_BOX.classList.add("wrong");
+  displayWord();
 }
 
 const randomLossMsg = () => {

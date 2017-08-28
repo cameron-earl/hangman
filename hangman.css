@@ -69,6 +69,7 @@ svg
     transform: scale(2);
 }
 
+.wrong,
 .letter.wrong
 {
     color: #c00;
