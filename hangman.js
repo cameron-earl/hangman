@@ -2,6 +2,7 @@ const WORD_BOX = document.querySelector("#word-box");
 const MSG_BOX = document.querySelector("#msg-box");
 const STAT_BOX = document.querySelector("#stat-box");
 const LETTER_BOX = document.querySelector("#letter-box");
+const NEW_GAME_BTN = document.querySelector("#new-game-btn")
 
 let wordList = [
   "ÐûàóÀÙ²", "ÔÑÚçÒ×¶Å", "ÎËâÕØ", "ØÝÚáÎÅÐ­¸©", "ÒëèÝÈ·Æ", "ÖûÒÍÚË¸Çº", "Ò÷æÓÖ¿Î", "ÔåèëèÙ´", "ØïèéàÕ¸½º", "Ôñèçè¿Ò", "Ðíøáâ", "ÖûÌéê¿Ð", "Ü÷îÛàÕ°¯", "ØÕìïÎ»", "Üáò×ÐÕÊµ", "ÖÝäåÂ", "ÞõÐãÌçÌÅ¨", "ÜùèÍèÉÊ»", "àÓæõÄÕÀÕ", "ÚÍüÍÀÑ", "Øûæçì", "ÚËØ×ä", "âÓîÙÄí°Å", "àíÞíèÉÈ­", "ÜýèÓÆÏ", "æÛÚçìÍ¼µ§", "äíöÓæÅ°§", "â÷ÖëÂßÊÃ", "Üõäåì", "ÞËúõì", "èÕĂùÆÓÆµ°", "ÞÛÒÍì", "ÜÙàï", "â÷àÏÂÓÚ", "àËøÃÐ", "àÛäçÐ", "àáðéî", "æßòÏâ·Â", "àåâß", "äõøíàå", "è×äÏÚÝÈ", "ìûèãÔÅÀ«", "èÿðíÐÁÜ", "îûèÍèÏØ¹ª", "ð÷öíÄ¿ÀÕ", "êûúÑÆÏ", "ìÍÜÅÖµ", "ðÑðÉØÏ®Ï", "ìÛàÍÊÍ", "êÛöËÒ", "êçÞ×¼", "ìéöñÚá", "òõàãÔáÀÍ", "ðùĀûØÉÈ­", "îõÊçäç", "òùÞ÷Þß¾¥", "îÓÈÇâ", "ôÙØÉÆßÊÃ", "ò×ðíÊßÂ", "øÝüÝðÍ¼µ", "ôßþïÐÑ¾¥", "îçÔëÄ", "òÑìÕÜÛ", "òëØÕØã", "òíòÅêÉ", "øûÚÕÌÝÀ½ ", "òùÚïÆË", "òýäë¾ã", "òçÈÉì", "öûÔÝÊÝº", "ôåúÓÚ", "üÑðÙÂ»Ä©", "þïĀÓìÝÀÇ¬", "öÉôñ", "ĂåèÓÎ¿º­º«", "üËÌÑâ", "ĂíöïÐÃÖ·", "Ă×ÌÝÜßÐ", "ĀÝÖ÷¾Á", "þÛæáì", "ĀéâÇÎ½"
@@ -36,28 +37,31 @@ const addEvents = () => {
     var key = ev.key.toLowerCase();
     if (!isOver && key.length === 1 && /[a-z]/.test(key)) {
       let el = document.querySelector("#" + key);
-      el.classList.add("grow");
+      el.classList.add("change");
       guess(el);
     }
 
-    switch (key) {
-      case " ":
-      case "enter":
+    if (key === " " || key === "enter") {
         newGame();
-        break;
+        NEW_GAME_BTN.classList.add("change");
     }
   });
+
   window.addEventListener("keyup", function(ev) {
     var key = ev.key.toLowerCase();
     if (key.length === 1 && /[a-z]/.test(key)) {
       let el = document.querySelector("#" + key);
-      el.classList.remove("grow");
+      el.classList.remove("change");
       if (!isOver) {
         el.classList.add("no-animate");
-        guess(el);
       }
     }
+    if (key === " " || key === "enter") {
+        NEW_GAME_BTN.classList.remove("change");
+    }
   });
+
+  NEW_GAME_BTN.addEventListener("click", newGame);
 }
 
 const guess = (ev) => {
@@ -89,6 +93,7 @@ const newGame = () => {
 const gameOver = () => {
   LETTER_BOX.classList.add("game-over");
   isOver = true;
+
 }
 
 const setWord = () => {
