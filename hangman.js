@@ -47,8 +47,9 @@ const createAlphabet = () => {
 
 const addEvents = () => {
   window.addEventListener("keydown", function(ev) {
+    let key = ev.key.toLowerCase();
     if (!inputActive) {
-      let key = ev.key.toLowerCase();
+      if (!key) key = ev.key;
       if (!isOver && key.length === 1 && /[a-z]/.test(key)) {
         let el = document.querySelector("#" + key);
         el.classList.add("change");
@@ -62,12 +63,17 @@ const addEvents = () => {
 
   window.addEventListener("keyup", function(ev) {
     let key = ev.key.toLowerCase();
+    if (!key) key = ev.key;
     if (key.length === 1 && /[a-z]/.test(key)) {
       let el = document.querySelector("#" + key);
       el.classList.remove("change");
       if (!isOver) {
         el.classList.add("no-animate");
       }
+    }
+    console.log(key);
+    if (key === ' ') {
+      CUSTOM_BTN.click();
     }
     if (key === "enter") {
       NEW_GAME_BTN.classList.remove("change");
