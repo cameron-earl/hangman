@@ -56,7 +56,6 @@ const addEvents = () => {
       }
     }
     if (key === "enter") {
-      newGame();
       NEW_GAME_BTN.classList.add("change");
     }
   });
@@ -72,6 +71,7 @@ const addEvents = () => {
     }
     if (key === "enter") {
       NEW_GAME_BTN.classList.remove("change");
+      NEW_GAME_BTN.click();
     }
   });
 
