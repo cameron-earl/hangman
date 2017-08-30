@@ -21,7 +21,7 @@ let wordList = [
 let currentWord,
   wordArr,
   isOver = false
-  badGuessCount = 0,
+badGuessCount = 0,
   guessCount = 0,
   gameCount = 0,
   inputActive = false;
@@ -48,21 +48,21 @@ const createAlphabet = () => {
 const addEvents = () => {
   window.addEventListener("keydown", function(ev) {
     if (!inputActive) {
-      var key = ev.key.toLowerCase();
+      let key = ev.key.toLowerCase();
       if (!isOver && key.length === 1 && /[a-z]/.test(key)) {
         let el = document.querySelector("#" + key);
         el.classList.add("change");
-        guess(el);
+        el.click();
       }
     }
     if (key === "enter") {
-        newGame();
-        NEW_GAME_BTN.classList.add("change");
+      newGame();
+      NEW_GAME_BTN.classList.add("change");
     }
   });
 
   window.addEventListener("keyup", function(ev) {
-    var key = ev.key.toLowerCase();
+    let key = ev.key.toLowerCase();
     if (key.length === 1 && /[a-z]/.test(key)) {
       let el = document.querySelector("#" + key);
       el.classList.remove("change");
@@ -71,7 +71,7 @@ const addEvents = () => {
       }
     }
     if (key === "enter") {
-        NEW_GAME_BTN.classList.remove("change");
+      NEW_GAME_BTN.classList.remove("change");
     }
   });
 
@@ -81,8 +81,7 @@ const addEvents = () => {
     inputActive = !inputActive;
     if (inputActive) {
       CUSTOM_INPUT.focus();
-    }
-    else {
+    } else {
       CUSTOM_INPUT.value = "";
     }
   });
@@ -98,7 +97,7 @@ const addEvents = () => {
 }
 
 const guess = (ev) => {
-  let el = ev.target || ev;
+  let el = ev.target;
   if (el.classList.contains("wrong") ||
     el.classList.contains("correct")) return;
   let letter = el.id;
@@ -116,7 +115,7 @@ const guess = (ev) => {
     displayWord();
   } else {
     badGuessCount++;
-    SVG_BODY[badGuessCount-1].classList.remove("faded");
+    SVG_BODY[badGuessCount - 1].classList.remove("faded");
   }
   if (wordArr.every(b => b === true)) win();
   if (badGuessCount === SVG_BODY.length) lose();
@@ -131,7 +130,7 @@ const newGame = (word) => {
   LETTER_BOX.classList.remove("game-over");
   badGuessCount = 0;
   guessCount = 0;
-  for(let x of SVG_BODY) {
+  for (let x of SVG_BODY) {
     x.classList.add('faded');
   }
 
@@ -239,7 +238,7 @@ const getRandomMessage = () => {
 const encryptStr = (str) => {
   let newStr = "";
   for (let i = 0; i < str.length; i++) {
-    newStr += String.fromCodePoint((str.codePointAt(i) << 1) + (str.length << 1) - i*i);
+    newStr += String.fromCodePoint((str.codePointAt(i) << 1) + (str.length << 1) - i * i);
   }
   return newStr;
 };
@@ -247,7 +246,7 @@ const encryptStr = (str) => {
 const decryptStr = (str) => {
   let newStr = "";
   for (let i = 0; i < str.length; i++) {
-    newStr += String.fromCodePoint((str.codePointAt(i)+ i*i - (str.length << 1)) >> 1)
+    newStr += String.fromCodePoint((str.codePointAt(i) + i * i - (str.length << 1)) >> 1)
   }
   return newStr
 };
