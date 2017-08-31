@@ -71,17 +71,17 @@ const addEvents = () => {
         el.classList.add("no-animate");
       }
     }
-    console.log(key);
     if (key === ' ') {
       CUSTOM_BTN.click();
     }
-    if (key === "enter") {
+    if (key === "enter" ) {
       NEW_GAME_BTN.classList.remove("change");
       NEW_GAME_BTN.click();
     }
   });
 
   NEW_GAME_BTN.addEventListener("click", newGame);
+
   CUSTOM_BTN.addEventListener("click", (ev) => {
     CUSTOM_INPUT.classList.toggle("hidden");
     inputActive = !inputActive;
@@ -93,6 +93,7 @@ const addEvents = () => {
   });
 
   CUSTOM_INPUT.addEventListener("keyup", (ev) => {
+    ev.stopPropagation();
     if (ev.keyCode === 13) {
       newGame(CUSTOM_INPUT.value);
       CUSTOM_BTN.click();
@@ -139,7 +140,6 @@ const newGame = (word) => {
   for (let x of SVG_BODY) {
     x.classList.add('faded');
   }
-
   MSG_BOX.textContent = getRandomMessage();
 };
 
@@ -172,7 +172,7 @@ const randomLossMsg = () => {
 
 const setWord = (word) => {
   if (typeof word === "string") {
-    word = word.replace(/[^a-zA-Z]/g, "").toLowerCase();
+    word = word.toLowerCase().replace(/[^a-z]/g, "");
     word = word.length >= 4 ? encryptStr(word) : getRandomWord();
   } else {
     word = getRandomWord();
