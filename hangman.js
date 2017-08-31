@@ -172,17 +172,22 @@ const randomLossMsg = () => {
 
 const setWord = (word) => {
   if (typeof word === "string") {
-    word = word.toLowerCase().replace(/[^a-z]/g, "");
-    word = word.length >= 4 ? encryptStr(word) : getRandomWord();
+    word = word.toLowerCase().replace(/[^a-z -]/g, "");
+    let justLetters = word.replace(/[^a-z]/g, "")
+    word = justLetters.length >= 4 ? encryptStr(word) : getRandomWord();
   } else {
     word = getRandomWord();
   }
   while (word === currentWord) {
     word = getRandomWord();
   }
+  let decryptedWord = decryptStr(word);
   currentWord = word;
   displayedWord = getUnderscores(word);
-  wordArr = new Array(word.length).fill(false);
+  wordArr = [];
+  for (let i = 0; i < word.length; i++) {
+    wordArr[i] = /[^a-z]/g.test(decryptedWord[i]);
+  }
 };
 
 const getRandomWord = (encrypted = true) => {
@@ -193,11 +198,7 @@ const getRandomWord = (encrypted = true) => {
 };
 
 const getUnderscores = (word) => {
-  let newWord = "";
-  for (let l of word) {
-    newWord += "_";
-  }
-  return newWord;
+  return word.split("").map(l => '_').join("");
 }
 
 const displayWord = () => {
