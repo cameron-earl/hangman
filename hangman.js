@@ -86,9 +86,11 @@ const addEvents = () => {
     CUSTOM_INPUT.classList.toggle("hidden");
     inputActive = !inputActive;
     if (inputActive) {
+      MSG_BOX.textContent = "Press enter to confirm, esc to cancel. Or use the buttons.";
       CUSTOM_INPUT.focus();
     } else {
       CUSTOM_INPUT.value = "";
+      MSG_BOX.textContent = getRandomMessage();
     }
   });
 
@@ -228,11 +230,10 @@ const getRandomMessage = () => {
 
   let messages = [
     "You can type or click the letters, whichever is easier.",
-    "You can set your own words (for your friends) with custom.",
-    "Feel free to inspect the code with Cmd+Alt+I! But no cheating.",
+    "You can set your own words (for your friends) with Custom Word.",
     currentWord.length + " letters of mystery. Guess away!",
-    "These aren't word-specific hints, by the way.",
     "There are " + wordList.length + " total possible words.",
+    "Most of the words built in are very difficult to guess."
     "There's no place like 127.0.0.1",
     "Right or wrong, at least it's not a matter of life and death, right? ...",
     '["hip","hip"]',
