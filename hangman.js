@@ -233,7 +233,7 @@ const getRandomMessage = () => {
     "You can set your own words (for your friends) with Custom Word.",
     currentWord.length + " letters of mystery. Guess away!",
     "There are " + wordList.length + " total possible words.",
-    "Most of the words built in are very difficult to guess."
+    "Most of the words built in are very difficult to guess.",
     "There's no place like 127.0.0.1",
     "Right or wrong, at least it's not a matter of life and death, right? ...",
     '["hip","hip"]',
