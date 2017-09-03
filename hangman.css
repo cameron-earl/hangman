@@ -12,9 +12,14 @@ svg
     stroke-width: 3;
 }
 
-.faded
+svg .faded
 {
     stroke: #eee;
+}
+
+svg #eyes.faded
+{
+    stroke: rgba(0,0,0,0);
 }
 
 #word-box
