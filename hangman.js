@@ -94,12 +94,9 @@ const addEvents = () => {
     }
   });
 
-  CUSTOM_INPUT.addEventListener("keyup", (ev) => {
+  CUSTOM_INPUT.addEventListener("keypress", (ev) => {
     ev.stopPropagation();
-    if (ev.keyCode === 13) {
-      newGame(CUSTOM_INPUT.value);
-      CUSTOM_BTN.click();
-    } else if (ev.keyCode === 27) {
+    if (ev.key === "Escape") {
       CUSTOM_BTN.click();
     }
   });
@@ -130,10 +127,10 @@ const guess = (ev) => {
   if (badGuessCount === SVG_BODY.length) lose();
 };
 
-const newGame = (word) => {
+const newGame = () => {
   if (isOver) gameCount++;
   isOver = false;
-  setWord(word);
+  setWord();
   displayWord();
   updateLetters();
   LETTER_BOX.classList.remove("game-over");
@@ -172,11 +169,13 @@ const randomLossMsg = () => {
   return messages[i];
 }
 
-const setWord = (word) => {
-  if (typeof word === "string") {
-    word = word.toLowerCase().replace(/[^a-z -]/g, "");
+const setWord = () => {
+  if (CUSTOM_INPUT.value.length) {
+    word = CUSTOM_INPUT.value.toLowerCase().replace(/[^a-z -]/g, "");
     let justLetters = word.replace(/[^a-z]/g, "")
-    word = justLetters.length >= 4 ? encryptStr(word) : getRandomWord();
+    let isValid = justLetters.length >= 4;
+    word = isValid ? encryptStr(word) : getRandomWord();
+    CUSTOM_BTN.click();
   } else {
     word = getRandomWord();
   }
@@ -192,8 +191,8 @@ const setWord = (word) => {
   }
 };
 
-const getRandomWord = (encrypted = true) => {
-  encrypted = false || encrypted;
+const getRandomWord = (encrypted) => {
+  encrypted = encrypted !== false;
   let i = Math.floor(Math.random() * wordList.length);
   if (encrypted) return wordList[i];
   return decryptStr(wordList[i]);
