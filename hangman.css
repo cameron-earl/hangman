@@ -71,7 +71,7 @@ svg #eyes.faded
 .letter:hover,
 .letter.change
 {
-    transform: scale(2);
+    transform: scale(1.8);
 }
 
 .wrong,
@@ -125,8 +125,8 @@ svg #eyes.faded
     display: none;
 }
 
-#new-game-btn:hover,
-#new-game-btn.change
+.button:hover,
+.button.change
 {
     background-color: #50a1f2;
 }
